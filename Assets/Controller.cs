@@ -27,22 +27,23 @@ public class Controller : MonoBehaviour
 
         Screen.SetResolution(512, 512, false);
 
-        if (File.Exists("background.png"))
+		if (File.Exists(Application.dataPath + "/../../background.png"))
         {
-            var imageWWW = new WWW("file://" + Application.dataPath + "/../background.png");
+            var imageWWW = new WWW("file://" + Application.dataPath + "/../../background.png");
             yield return imageWWW;
             image.texture = imageWWW.texture;
         }
-        else if (File.Exists("background.jpg"))
+		else if (File.Exists(Application.dataPath + "/../../background.jpg"))
         {
-            var imageWWW = new WWW("file://" + Application.dataPath + "/../background.jpg");
+            var imageWWW = new WWW("file://" + Application.dataPath + "/../../background.jpg");
             yield return imageWWW;
             image.texture = imageWWW.texture;
         }
 
         var audiosource = gameObject.AddComponent<AudioSource>();
-        var audioWWW = new WWW("file://" + Application.dataPath + "/../audio.wav");
+        var audioWWW = new WWW("file://" + Application.dataPath + "/../../audio.wav");
         yield return audioWWW;
+		print (audioWWW.url);
         audiosource.clip = audioWWW.GetAudioClip(false);
         audiosource.Play();
 
@@ -58,11 +59,12 @@ public class Controller : MonoBehaviour
         recorder.EndRecording();
 
         if (useWebMInsteadOfMp4)
-        {
-            var webmPath = "\"" + LastPath + ".webm\"";
-            var mp4Path = "\"" + LastPath + ".mp4\"";
+		{
+			var webmPath = "\"" + new FileInfo(Application.dataPath + "/../." + LastPath + ".webm").FullName + "\"";
+			var mp4Path =  "\"" + new FileInfo(Application.dataPath + "/../." + LastPath + ".mp4").FullName + "\"";
             var exeExtension = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer ? ".exe" : "";
-            var process = Process.Start(Application.dataPath + "/../ffmpeg/ffmpeg" + exeExtension, "-i " + webmPath + " " + mp4Path);
+			print(Application.dataPath + "/../../ffmpeg/ffmpeg" + exeExtension);
+			var process = Process.Start(Application.dataPath + "/../../ffmpeg/ffmpeg" + exeExtension, "-i " + webmPath + " " + mp4Path);
             process.WaitForExit();
         }
 
